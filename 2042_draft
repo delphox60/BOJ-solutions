@@ -1,0 +1,66 @@
+#include <iostream>
+#define ll long long
+
+using namespace std;
+
+int N, M, K;
+
+ll arr[100005];
+ll tree[400005];
+
+int init(int low, int high, int n)
+{
+    if (low == high)
+        return tree[n] = arr[low];
+    int mid = (low + high) / 2;
+    return tree[n] = init(low, mid, 2 * n) + init(mid + 1, high, 2 * n + 1);
+}
+
+int sum(int s, int e, int r, int l, int n)
+{
+    if (r < s || l > e)
+        return 0;
+    if (s <= r && l <= e)
+        return tree[n];
+    int m = (r + l) / 2;
+    return sum(s, e, r, m, 2 * n) + sum(s, e, m + 1, l, 2 * n + 1);
+}
+
+void update(int s, int e, int idx, int n, ll diff)
+{
+    if (idx < s || idx > e)
+        return;
+    tree[n] += diff;
+    int m = (s + e) / 2;
+    update(s, m, idx, 2 * n, diff);
+    update(m + 1, e, idx, 2 * n + 1, diff);
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    cin >> N >> M >> K;
+
+    for (int i = 1; i <= N; i++)
+        cin >> arr[i];
+
+    init(1, N, 1);
+
+    for (int i = 0; i < M + K; i++)
+    {
+        int a, b, c;
+        cin >> a >> b >> c;
+        if (a == 1)
+        {
+            ll diff = c - arr[b];
+            arr[b] = c;
+            update(1, N, b, 1, diff);
+        }
+        else if (a == 2)
+        {
+            cout << sum(1, N, b, c, 1) << '\n';
+        }
+    }
+}
