@@ -13,7 +13,7 @@ ll rmd(ll n) { return n % 1000000007; }
 ll init(ll low, ll high, ll n)
 {
     if (low == high)
-        return tree[n] = arr[low];
+        return tree[n] = rmd(arr[low]);
 
     ll mid = (low + high) / 2;
 
@@ -26,7 +26,7 @@ ll mul(ll s, ll e, ll l, ll r, ll n)
         return 1;
 
     if (s <= l && r <= e)
-        return tree[n];
+        return rmd(tree[n]);
 
     ll m = (l + r) / 2;
     return rmd(mul(s, e, l, m, 2 * n) * mul(s, e, m + 1, r, 2 * n + 1));
